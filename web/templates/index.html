@@ -1,0 +1,18 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}My Awesome Web App{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Welcome to my awesome web app!</h1>
+<p>This is where all the cool stuff happens.</p>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+{% endblock %}
