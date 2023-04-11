@@ -40,8 +40,8 @@ class DataCollector:
                 post_info = post_soup.findAll('span', {'class': 'article-meta-value'})
                 post_author = post_info[0].text
                 post_title = post_info[2].text
-                post_date = post_info[3].text
-                post_dict = {'title': post_title, 'author': post_author, 'date': post_date, 'content': post_content}
+                post_created = post_info[3].text
+                post_dict = {'title': post_title, 'author': post_author, 'created': post_created, 'content': post_content}
                 posts.append(post_dict)
 
         self.posts = posts

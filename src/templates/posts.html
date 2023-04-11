@@ -1,14 +1,10 @@
-{% extends 'bootstrap/base.html' %}
+{% extends 'base.html' %}
 
-{% block title %}My Awesome Web App{% endblock %}
-
-{% block styles %}
-{{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% block title %}
+Posts
 {% endblock %}
 
 {% block content %}
-<h1>Posts</h1>
 
 {% for post in posts %}
 <div class="post">
@@ -19,9 +15,5 @@
 </div>
 {% endfor %}
 
-{% endblock %}
 
-{% block scripts %}
-{{ super() }}
-<script src="{{ url_for('static', filename='js/script.js') }}"></script>
 {% endblock %}
