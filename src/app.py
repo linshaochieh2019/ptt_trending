@@ -7,7 +7,6 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-
 @app.route('/posts', methods=('GET', 'POST'))
 def posts():
         
@@ -20,7 +19,7 @@ def posts():
         return render_template('posts.html', posts=collector.posts)
 
     # GET method
-    return render_template('search.html')
+    return render_template('form.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
