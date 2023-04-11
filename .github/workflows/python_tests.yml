@@ -6,6 +6,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      APP_URL: https://ptt-trending.herokuapp.com
+
     steps:
     - uses: actions/checkout@v2
 
