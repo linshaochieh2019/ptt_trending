@@ -8,7 +8,6 @@ def index():
     return render_template('index.html')
 
 
-
 @app.route('/posts', methods=('GET', 'POST'))
 def posts():
         
