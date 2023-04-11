@@ -1,0 +1,31 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}My Awesome Web App{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Welcome to my awesome web app!</h1>
+<p>This is where all the cool stuff happens.</p>
+
+<form method="post" action="{{ url_for('submit_form') }}">
+  <div class="form-group">
+    <label for="board">Board:</label>
+    <input type="text" class="form-control" id="board" name="board">
+  </div>
+  <div class="form-group">
+    <label for="num_pages">Number of pages:</label>
+    <input type="number" class="form-control" id="num_pages" name="num_pages">
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+{% endblock %}

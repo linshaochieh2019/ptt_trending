@@ -1,12 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
-import psycopg2
 
 class DataCollector:
-    def __init__(self, board, num_pages):
-        self.posts = self.scrape_ptt_posts(board, num_pages)
+    def __init__(self):
+        self.posts = None
 
-    def scrape_ptt_posts(board, num_pages):
+    def scrape_ptt_posts(self, board, num_pages):
 
         url = f'https://www.ptt.cc/bbs/{board}/index.html'
         session = requests.Session()
@@ -45,32 +44,5 @@ class DataCollector:
                 post_dict = {'title': post_title, 'author': post_author, 'date': post_date, 'content': post_content}
                 posts.append(post_dict)
 
-        return posts
-    
-    def insert_posts(self):
-        conn = psycopg2.connect(
-            host="your_host",
-            database="your_db_name",
-            user="your_username",
-            password="your_password"
-        )
-
-        # create a cursor object
-        cur = conn.cursor()
-
-        # create a table
-        cur.execute("CREATE TABLE posts (title TEXT, author TEXT, date TEXT, content TEXT)")
-
-        # insert data into the table
-        for post in self.posts:
-            cur.execute(
-                "INSERT INTO posts (title, author, date, content) VALUES (%s, %s, %s, %s)",
-                (post['title'], post['author'], post['date'], post['content'])
-            )
-
-        # commit changes to the database
-        conn.commit()
-
-        # close cursor and connection
-        cur.close()
-        conn.close()
+        self.posts = posts
+        print(f'Retrieve {len(posts)} posts from PTT.')
