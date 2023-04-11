@@ -4,3 +4,4 @@ src/__pycache__/
 /instance
 /web.egg-info
 __pycache__/
+/src/.env
