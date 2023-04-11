@@ -7,8 +7,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      # added this and the tests passed after Heroku deployment 
       APP_URL: https://ptt-trending.herokuapp.com
-
+      
     steps:
     - uses: actions/checkout@v2
 

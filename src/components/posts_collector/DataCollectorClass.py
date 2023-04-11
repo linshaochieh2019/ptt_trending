@@ -1,5 +1,9 @@
 import requests
+from datetime import datetime
 from bs4 import BeautifulSoup
+
+from app import db
+from models.post import Post
 
 class DataCollector:
     def __init__(self):
@@ -31,7 +35,7 @@ class DataCollector:
                 try:
                     post_url = 'https://www.ptt.cc' + link.find('a')['href']
                 except:
-                    pass #a href not exist - for example the deleted posts
+                    continue #a href not exist - for example the deleted posts
                 
                 post_response = session.get(post_url, cookies={'over18': '1'})
                 post_soup = BeautifulSoup(post_response.text, 'html.parser')
@@ -41,8 +45,19 @@ class DataCollector:
                 post_author = post_info[0].text
                 post_title = post_info[2].text
                 post_created = post_info[3].text
-                post_dict = {'title': post_title, 'author': post_author, 'created': post_created, 'content': post_content}
+                post_created = datetime.strptime(post_created, '%a %b %d %H:%M:%S %Y')
+                post_dict = {'title': post_title, 'author': post_author, 'created': post_created, 'content': post_content, 'board': board,}
                 posts.append(post_dict)
 
         self.posts = posts
         print(f'Retrieve {len(posts)} posts from PTT.')
+
+        # store the posts to db
+        for post in self.posts:
+            # Check if post already exists in the database
+            existing_post = Post.query.filter_by(title=post['title'], author=post['author'], created=post['created']).first()
+            if not existing_post:
+                # Post does not exist, so add it to the database
+                p = Post(title=post['title'], author=post['author'], created=post['created'], content=post['content'], board=post['board'])
+                db.session.add(p)
+        db.session.commit()
