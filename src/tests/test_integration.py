@@ -3,6 +3,7 @@ import unittest
 import requests
 
 app_url = os.environ.get('APP_URL')
+print(f'app_url={app_url}')
 
 class TestIntegration(unittest.TestCase):
 
