@@ -1,12 +1,12 @@
 from flask import Flask, request, render_template
-from flask_sqlalchemy import SQLAlchemy
+import os
 
 from models.post import db, Post
 
 from components.posts_collector.DataCollectorClass import DataCollector
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI')
 
 db.init_app(app)
 with app.app_context():
