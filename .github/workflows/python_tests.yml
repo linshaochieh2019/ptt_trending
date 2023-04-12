@@ -9,7 +9,6 @@ jobs:
     env:
       # added this and the tests passed after Heroku deployment 
       APP_URL: https://ptt-trending.herokuapp.com
-      DB_URI: postgresql://ptt_trending_user:1234@localhost:5432/ptt_trending_db
       
     steps:
     - uses: actions/checkout@v2
@@ -26,4 +25,3 @@ jobs:
 
     - name: Run tests
       run: pytest
-
