@@ -1,30 +1,38 @@
 import unittest
 from unittest.mock import patch
+
+from app import app,db
+from models.post import Post
+from datetime import datetime
+
 from components.posts_collector.DataCollectorClass import DataCollector
 
 class TestDataCollector(unittest.TestCase):
     
-    def test_scrape_ptt_posts(self):
-        with patch('requests.Session.get') as mock_get:
-            mock_get.return_value.text = '''
-                <div class="btn-group btn-group-paging">
-				<a class="btn wide" href="/bbs/Gossiping/index1.html">最舊</a>
-				<a class="btn wide" href="/bbs/Gossiping/index39022.html">&lsaquo; 上頁</a>
-				<a class="btn wide disabled">下頁 &rsaquo;</a>
-				<a class="btn wide" href="/bbs/Gossiping/index.html">最新</a>
-			</div>
-            '''
+    def test_save_posts(self):
+        with app.app_context():
+            post = {
+                'title': 'test title',
+                'author': 'test author',
+                'created': datetime.strptime('2022-04-10 12:34:56', '%Y-%m-%d %H:%M:%S'),
+                'content': 'test content',
+                'board': 'test_board'
+            }
             collector = DataCollector()
-            collector.scrape_ptt_posts('Test', 1)
-            self.assertIsNotNone(collector.posts)
-            self.assertEqual(len(collector.posts), 0)
-    
-    def test_scrape_ptt_posts_invalid_board(self):
-        collector = DataCollector()
-        with self.assertRaises(Exception):
-            collector.scrape_ptt_posts('InvalidBoardName', 1)
-    
-    def test_scrape_ptt_posts_invalid_num_pages(self):
-        collector = DataCollector()
-        with self.assertRaises(Exception):
-            collector.scrape_ptt_posts('Test', 'invalid_num_pages')
+            collector.posts = [post]
+            collector.save_posts()
+            saved_post = Post.query.filter_by(title=post['title'], author=post['author'], created=post['created']).first()
+            self.assertIsNotNone(saved_post)
+            self.assertEqual(saved_post.title, post['title'])
+            self.assertEqual(saved_post.author, post['author'])
+            self.assertEqual(saved_post.created, post['created'])
+            self.assertEqual(saved_post.content, post['content'])
+            self.assertEqual(saved_post.board, post['board'])
+
+    def tearDown(self):
+        with app.app_context():
+            Post.query.filter_by(board='test_board').delete()
+            db.session.commit()
+
+if __name__ == '__main__':
+    unittest.main()

@@ -5,3 +5,4 @@ src/__pycache__/
 /web.egg-info
 __pycache__/
 /src/.env
+/src/instance/

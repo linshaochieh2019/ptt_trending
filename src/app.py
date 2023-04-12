@@ -16,7 +16,6 @@ with app.app_context():
 def index():
     return render_template('index.html')
 
-
 @app.route('/scrape', methods=('GET', 'POST'))
 def scrape():
     if request.method == 'POST':
@@ -24,6 +23,7 @@ def scrape():
         num_pages = int(request.form['num_pages'])
         collector = DataCollector()
         collector.scrape_ptt_posts(board, num_pages)
+        collector.save_posts()
         return render_template('posts.html', posts=collector.posts)
     
     # GET request

@@ -52,7 +52,7 @@ class DataCollector:
         self.posts = posts
         print(f'Retrieve {len(posts)} posts from PTT.')
 
-        # store the posts to db
+    def save_posts(self):
         for post in self.posts:
             # Check if post already exists in the database
             existing_post = Post.query.filter_by(title=post['title'], author=post['author'], created=post['created']).first()

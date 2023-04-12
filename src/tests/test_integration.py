@@ -17,6 +17,6 @@ class TestIntegration(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
 
             form_data = {'board': 'Gossiping', 'num_pages': 1}
-            response = session.post(f'{app_url}/posts', data=form_data)
+            response = session.post(f'{app_url}/scrape', data=form_data)
             self.assertEqual(response.status_code, 200)
             self.assertIn('<div class="post">', response.text) # check if there's at least one post content
