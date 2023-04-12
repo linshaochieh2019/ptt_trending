@@ -8,12 +8,10 @@ from components.posts_collector.DataCollectorClass import DataCollector
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 if app.config['SQLALCHEMY_DATABASE_URI'] is None:
     raise ValueError('No database URL set')
-
-
 
 db.init_app(app)
 with app.app_context():
