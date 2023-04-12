@@ -8,16 +8,7 @@ from components.posts_collector.DataCollectorClass import DataCollector
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-if os.environ.get('DYNO'):    
-    # heroku
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://qqbjdftfomapyt:8edf6ccebf49940d554574508e6a7bdf3793e2b7d3ead39ff353c2fe8ad6ed4f@ec2-34-236-199-229.compute-1.amazonaws.com:5432/d9d64867psc2p8'
-
-else:
-    # local
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ptt_trending_user:1234@localhost:5432/ptt_trending_db'
-
-print(f"Current db URL config: {app.config['SQLALCHEMY_DATABASE_URI']}")
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://qqbjdftfomapyt:8edf6ccebf49940d554574508e6a7bdf3793e2b7d3ead39ff353c2fe8ad6ed4f@ec2-34-236-199-229.compute-1.amazonaws.com:5432/d9d64867psc2p8'
 
 if app.config['SQLALCHEMY_DATABASE_URI'] is None:
     raise ValueError('No database URL set')
