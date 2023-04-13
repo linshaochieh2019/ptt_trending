@@ -14,3 +14,13 @@ class Post(db.Model):
 
     def __repr__(self):
         return f'<Post {self.id}>'
+    
+class Prediction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    category = db.Column(db.Integer)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+    post = db.relationship('Post', backref='prediction')
+
+    def __repr__(self):
+        return f'<Predictions {self.id}>'
+    

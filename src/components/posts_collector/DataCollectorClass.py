@@ -3,7 +3,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 
 from app import db
-from models.post import Post
+from models.models import Post
 
 class DataCollector:
     def __init__(self):

@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch
 
 from app import app,db
-from models.post import Post
+from models.models import Post
 from datetime import datetime
 
 from components.posts_collector.DataCollectorClass import DataCollector
