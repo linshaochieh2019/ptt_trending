@@ -1,8 +1,6 @@
 .DS_Store
 src/__pycache__/
 /venv
-/instance
 /web.egg-info
 __pycache__/
 /src/.env
-/src/instance/
