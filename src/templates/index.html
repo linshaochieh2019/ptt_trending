@@ -5,6 +5,11 @@ My Awesome Web App - Home
 {% endblock %}
 
 {% block content %}
-<h1>Welcome to my awesome web app!</h1>
-<p>This is where all the cool stuff happens.</p>
+    <h1>Welcome to my awesome web app!</h1>
+    <p>This is where all the cool stuff happens.</p>
+      
+    <canvas id="myChart"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>     
+
 {% endblock %}

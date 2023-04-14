@@ -7,7 +7,7 @@ import openai
 
 from models.models import Post, Prediction
 
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 
 class DataAnalyzer:
@@ -23,15 +23,22 @@ class DataAnalyzer:
             mapping = json.load(f)
         return mapping
 
-    def get_posts(self):
+    def get_today_posts(self):
         today = date.today()
         start_of_day = datetime.combine(today, datetime.min.time())
         end_of_day = datetime.combine(today, datetime.max.time())
         self.posts = Post.query.filter(Post.created >= start_of_day, Post.created <= end_of_day)\
-            .with_entities(Post.id, Post.content).limit(20).all()
+            .with_entities(Post.id, Post.content).all()
 
-        print(f'Number of posts retrieve: {len(self.posts)}')
-            
+        print(f'Number of posts retrieved: {len(self.posts)}')
+
+    def get_all_posts(self):
+        self.posts = Post.query.outerjoin(Prediction, Post.id == Prediction.post_id)\
+                .filter(Prediction.post_id == None)\
+                .with_entities(Post.id, Post.content).all()
+        
+        print(f'Number of posts retrieved: {len(self.posts)}')
+
     def classifiy(self):
         if self.posts == None: 
             return # The analyzer doesn't have any posts to categorize.

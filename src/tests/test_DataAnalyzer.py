@@ -19,10 +19,10 @@ class TestDataAnalyzer(unittest.TestCase):
     def test_get_mapping(self):
         self.assertIsInstance(self.analyzer.mapping, dict)
 
-    def test_get_posts(self):
+    def test_get_today_posts(self):
         # Create a test post with today's date
         with app.app_context():
-            self.analyzer.get_posts()
+            self.analyzer.get_today_posts()
             self.assertGreaterEqual(len(self.analyzer.posts), 1)
 
     def tearDown(self):
