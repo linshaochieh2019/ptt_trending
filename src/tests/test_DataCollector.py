@@ -1,14 +1,47 @@
 import unittest
-from unittest.mock import patch
+import requests
+from datetime import datetime, date
 
 from app import app,db
 from models.models import Post
-from datetime import datetime
 
 from components.posts_collector.DataCollectorClass import DataCollector
 
 class TestDataCollector(unittest.TestCase):
     
+    def setUp(self):
+        self.data_collector = DataCollector()
+        
+    def test_get_ptt_session(self):
+        self.assertIsInstance(self.data_collector.session, requests.Session)
+        self.assertEqual(self.data_collector.session.cookies['over18'], '1')
+
+    def test_get_latests_page_num(self):
+        latest_page_num = self.data_collector.get_lastest_page_num('NBA')
+        self.assertIsInstance(latest_page_num, int)
+        self.assertGreater(latest_page_num, 6000)
+        
+    def test_retrieve_ptt_html(self):
+        html = self.data_collector.retrieve_ptt_html('NBA', 1)
+        self.assertIn('NBA', html)
+
+    def test_get_post_urls(self):
+        html = self.data_collector.retrieve_ptt_html('NBA', 1)
+        post_urls = self.data_collector.get_post_urls(html)
+        self.assertIsInstance(post_urls, list)
+        self.assertGreater(len(post_urls), 1)
+
+    def test_get_posts(self):
+        html = self.data_collector.retrieve_ptt_html('NBA', 1)
+        post_urls = self.data_collector.get_post_urls(html)
+        posts = self.data_collector.get_posts(post_urls)
+        self.assertIsInstance(posts, list)
+
+        post = posts[-1]
+        self.assertIsInstance(post['title'], str)
+        self.assertIsInstance(post['author'], str)
+        self.assertIsInstance(post['created'], date)
+        
     def test_save_posts(self):
         with app.app_context():
             post = {

@@ -14,17 +14,6 @@ class TestIntegration(unittest.TestCase):
         response = requests.get(f'{app_url}/')
         self.assertEqual(response.status_code, 200)
 
-    def test_form_submission(self):
-        with requests.Session() as session:
-            response = session.get(f'{app_url}/posts')
-            self.assertEqual(response.status_code, 200)
-
-            form_data = {'board': 'Gossiping', 'num_pages': 1}
-            response = session.post(f'{app_url}/scrape', data=form_data)
-            self.assertEqual(response.status_code, 200)
-            self.assertIn('<div class="post">', response.text) # check if there's at least one post content
-
-
     def test_get_mapping(self):
         # Use test client to make a GET request to /mapping
         with app.test_client() as client:
@@ -43,7 +32,6 @@ class TestIntegration(unittest.TestCase):
             assert isinstance(mapping['1'], str)
             assert isinstance(mapping['2'], str)
             assert isinstance(mapping['3'], str)
-
 
     def test_get_colors(self):
         # Use test client to make a GET request to /colors

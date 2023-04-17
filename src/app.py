@@ -29,24 +29,25 @@ with app.app_context():
 def index():
     return render_template('index.html')
 
+@app.route('/posts')
+def posts():
+    posts = Post.query.all()
+    return render_template('posts.html', posts=posts)
+
 @app.route('/scrape', methods=('GET', 'POST'))
 def scrape():
     if request.method == 'POST':
         board = request.form['board']
-        num_pages = int(request.form['num_pages'])
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
         collector = DataCollector()
-        collector.scrape_ptt_posts(board, num_pages)
+        collector.scrape_ptt_posts(board, start_date, end_date)
         collector.save_posts()
         return render_template('posts.html', posts=collector.posts)
     
     # GET request
     return render_template('form.html')
 
-
-@app.route('/posts')
-def posts():
-    posts = Post.query.all()
-    return render_template('posts.html', posts=posts)
 
 @app.route('/analyze_today')
 def analyze_today():
