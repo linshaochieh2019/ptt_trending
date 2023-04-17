@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Form: Classify Posts by Dates{% endblock %}
+
+{% block content %}
+  <h1>Form: Classify Posts by Dates</h1>
+  <form method="post">
+    <div class="form-group">
+      <label for="start_date">Start date:</label>
+      <input type="date" class="form-control" id="start_date" name="start_date">
+      <label for="end_date">End date:</label>
+      <input type="date" class="form-control" id="end_date" name="end_date">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+{% endblock %}

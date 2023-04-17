@@ -5,6 +5,7 @@ from collections import defaultdict
 from datetime import datetime, date, timedelta
 import pandas as pd
 import json
+import time
 
 from models.models import db, Post, Prediction
 
@@ -15,11 +16,17 @@ app = Flask(__name__, static_folder='static')
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+if os.environ.get('DYNO'):  # running on Heroku
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://qqbjdftfomapyt:8edf6ccebf49940d554574508e6a7bdf3793e2b7d3ead39ff353c2fe8ad6ed4f@ec2-34-236-199-229.compute-1.amazonaws.com:5432/d9d64867psc2p8'
+else:  # running locally
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+
+
 # local
 #app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 # heroku
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://qqbjdftfomapyt:8edf6ccebf49940d554574508e6a7bdf3793e2b7d3ead39ff353c2fe8ad6ed4f@ec2-34-236-199-229.compute-1.amazonaws.com:5432/d9d64867psc2p8'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://qqbjdftfomapyt:8edf6ccebf49940d554574508e6a7bdf3793e2b7d3ead39ff353c2fe8ad6ed4f@ec2-34-236-199-229.compute-1.amazonaws.com:5432/d9d64867psc2p8'
 
 db.init_app(app)
 with app.app_context():
@@ -46,26 +53,24 @@ def scrape():
         return render_template('posts.html', posts=collector.posts)
     
     # GET request
-    return render_template('form.html')
+    return render_template('form_collecting.html')
 
 
-@app.route('/analyze_today')
-def analyze_today():
-    mapping_file_path = os.path.join(app.instance_path, 'mapping.json')
-    analyzer = DataAnalyzer(db, mapping_file_path)
-    analyzer.get_today_posts()
-    analyzer.classifiy()
-    analyzer.save_categorized_data()
-    return 'Worked!'
+@app.route('/classify', methods=('GET', 'POST'))
+def classify():
+    if request.method == 'POST':
+        start_date = request.form['start_date']
+        end_date = request.form['end_date']
+        mapping_file_path = os.path.join(app.instance_path, 'mapping.json')
+        analyzer = DataAnalyzer(db, mapping_file_path)
+        analyzer.get_posts_by_dates(start_date, end_date)
+        analyzer.classifiy()
+        analyzer.save_categorized_data()
+        return analyzer.categorized_data
 
-@app.route('/analyze_all')
-def analyze_all():
-    mapping_file_path = os.path.join(app.instance_path, 'mapping.json')
-    analyzer = DataAnalyzer(db, mapping_file_path)
-    analyzer.get_all_posts()
-    analyzer.classifiy()
-    analyzer.save_categorized_data()
-    return 'Worked!'
+    # GET request
+    return render_template('form_classifying.html')
+
 
 @app.route('/mapping')
 def get_mapping():
@@ -109,6 +114,15 @@ def get_data():
 
     
     return jsonify(data)
+
+@app.cli.command()
+def scheduled():
+    """Run scheduled job."""
+    print('Importing feeds...')
+    time.sleep(5)
+    print('Posts:', str(Post.query.order_by(Post.created.desc()).limit(5).all()))
+    print('Done!')
+
         
 if __name__ == '__main__':
     app.run(debug=True)

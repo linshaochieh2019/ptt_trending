@@ -4,13 +4,10 @@ import requests
 import json
 from app import app
 
-
-app_url = os.environ.get('APP_URL')
-print(f'app_url={app_url}')
-
 class TestIntegration(unittest.TestCase):
 
     def test_index(self):
+        app_url = os.environ.get('APP_URL')
         response = requests.get(f'{app_url}/')
         self.assertEqual(response.status_code, 200)
 

@@ -1,13 +1,10 @@
-import requests
-from sqlalchemy import text
-
 import os
 import json
+from datetime import datetime
+
 import openai
 
 from models.models import Post, Prediction
-
-from datetime import datetime, date, timedelta
 
 
 class DataAnalyzer:
@@ -23,24 +20,28 @@ class DataAnalyzer:
             mapping = json.load(f)
         return mapping
 
-    def get_today_posts(self):
-        today = date.today()
-        start_of_day = datetime.combine(today, datetime.min.time())
-        end_of_day = datetime.combine(today, datetime.max.time())
-        self.posts = Post.query.filter(Post.created >= start_of_day, Post.created <= end_of_day)\
+    def get_posts_by_dates(self, start_date, end_date):
+        
+        # convert start and end dates to datetime objects
+        # if not specified then date == today
+        if start_date == '':
+            start_date = datetime.today().date()
+        else:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+        if end_date == '':
+            end_date = datetime.today().date()
+        else:
+            end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+
+        self.posts = Post.query.filter(Post.created >= start_date, Post.created <= end_date)\
             .with_entities(Post.id, Post.content).all()
 
         print(f'Number of posts retrieved: {len(self.posts)}')
 
-    def get_all_posts(self):
-        self.posts = Post.query.outerjoin(Prediction, Post.id == Prediction.post_id)\
-                .filter(Prediction.post_id == None)\
-                .with_entities(Post.id, Post.content).all()
-        
-        print(f'Number of posts retrieved: {len(self.posts)}')
 
     def classifiy(self):
         if self.posts == None: 
+            print('There is no post for classfication.')
             return # The analyzer doesn't have any posts to categorize.
 
         openai.api_key = os.getenv("OPENAI_API_KEY")
