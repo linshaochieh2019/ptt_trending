@@ -10,6 +10,7 @@ jobs:
       # added this and the tests passed after Heroku deployment 
       APP_URL: https://ptt-trending.herokuapp.com
       DATABASE_URL: postgresql://qqbjdftfomapyt:8edf6ccebf49940d554574508e6a7bdf3793e2b7d3ead39ff353c2fe8ad6ed4f@ec2-34-236-199-229.compute-1.amazonaws.com:5432/d9d64867psc2p8
+      OPENAI_API_KEY: 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
 
     steps:
     - uses: actions/checkout@v2

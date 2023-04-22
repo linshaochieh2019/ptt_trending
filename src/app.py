@@ -21,13 +21,6 @@ if os.environ.get('DYNO'):  # running on Heroku
 else:  # running locally
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
-
-# local
-#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-
-# heroku
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://qqbjdftfomapyt:8edf6ccebf49940d554574508e6a7bdf3793e2b7d3ead39ff353c2fe8ad6ed4f@ec2-34-236-199-229.compute-1.amazonaws.com:5432/d9d64867psc2p8'
-
 db.init_app(app)
 with app.app_context():
     db.create_all()
@@ -114,15 +107,6 @@ def get_data():
 
     
     return jsonify(data)
-
-@app.cli.command()
-def scheduled():
-    """Run scheduled job."""
-    print('Importing feeds...')
-    time.sleep(5)
-    print('Posts:', str(Post.query.order_by(Post.created.desc()).limit(5).all()))
-    print('Done!')
-
         
 if __name__ == '__main__':
     app.run(debug=True)
