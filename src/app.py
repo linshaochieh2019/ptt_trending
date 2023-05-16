@@ -1,4 +1,6 @@
 from flask import Flask, request, render_template, jsonify
+from prometheus_flask_exporter import PrometheusMetrics
+
 import os
 from sqlalchemy import func
 from collections import defaultdict
@@ -13,6 +15,7 @@ from components.posts_collector.DataCollectorClass import DataCollector
 from components.posts_analyzer.DataAnalyzerClass import DataAnalyzer
 
 app = Flask(__name__, static_folder='static')
+metrics = PrometheusMetrics(app)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -108,5 +111,15 @@ def get_data():
     
     return jsonify(data)
         
+
+@app.route('/health')
+def health_check():
+    return '200 OK'
+
+@app.route('/metrics')
+def metrics():
+    metrics.counter('requests_total', 'Total number of requests', labels={'endpoint': '/metrics'}).inc()
+    return '200 OK'
+
 if __name__ == '__main__':
     app.run(debug=True)
