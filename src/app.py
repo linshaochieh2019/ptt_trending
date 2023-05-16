@@ -20,7 +20,7 @@ metrics = PrometheusMetrics(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 if os.environ.get('DYNO'):  # running on Heroku
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://qqbjdftfomapyt:8edf6ccebf49940d554574508e6a7bdf3793e2b7d3ead39ff353c2fe8ad6ed4f@ec2-34-236-199-229.compute-1.amazonaws.com:5432/d9d64867psc2p8'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ukzhralgvksgru:02eac7d36698c536a64669d26f2a1b5da607bcbb1a5de39136bd92633fc15552@ec2-3-216-4-251.compute-1.amazonaws.com:5432/d7ved70auc5eo6'
 else:  # running locally
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
